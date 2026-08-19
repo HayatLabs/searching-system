@@ -52,7 +52,7 @@ export class DuckDuckGoSearchAdapter implements ISearchAdapter {
           return item.cleanUrl && !isYahoo && !isBingAd && item.title.length > 2;
         });
 
-      console.log(`[Debug] Total Genuine External Links Found: ${externalLinks.length}`);
+      console.log(`-- Total Genuine External Links Found: ${externalLinks.length}`);
 
       const results: SearchResult[] = [];
 
@@ -69,11 +69,11 @@ export class DuckDuckGoSearchAdapter implements ISearchAdapter {
         }
       });
 
-      console.log(`[Search] Processed ${results.length} organic web results.`);
+      console.log(` Processed ${results.length} organic web results.`);
       return results;
 
     } catch (error) {
-      console.error('[Search Error] Yahoo search failed:', error);
+      console.error(' Yahoo search failed:', error);
       return [];
     }
   }
