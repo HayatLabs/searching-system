@@ -12,5 +12,7 @@ export interface ExtractedContent {
   metadata: {
     wordCount?: number;
     fetchedAt: string;
+    image?: string;
+    isSocialMedia?: boolean;
   };
 }

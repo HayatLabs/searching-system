@@ -1,12 +1,25 @@
-import { DuckDuckGoSearchAdapter } from "../src/search/duckduckgo-search.adapter";
+import { PageFetcher } from "../src/crawler/page-fetcher";
+import { ContentExtractor } from "../src/crawler/content-extractor"; 
 
 const runTest = async () => {
-  const adapter = new DuckDuckGoSearchAdapter();
+  const fetcher = new PageFetcher();
+  const extractor = new ContentExtractor();
 
-  const results = await adapter.search("King Of King ", 7);
+  const crawlResult = await fetcher.fetchSingle("https://itshayat.vercel.app");
 
-  console.log("--Search Results ");
-  console.log(results);
+  if (crawlResult) {
+    const cleanData = await extractor.extract(crawlResult);
+
+    console.log(`Title: ${cleanData.title}`);
+    console.log(`Word Count: ${cleanData.metadata.wordCount} words`);
+    
+    console.log(cleanData.content.substring(0) + "...\n");
+    
+    console.log("Metadata:", cleanData.metadata);
+
+  } else {
+    console.log("[Error] Page crawl failed.");
+  }
 };
 
 runTest();
