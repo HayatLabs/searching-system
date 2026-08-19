@@ -12,19 +12,18 @@ An extensible web discovery and search system that takes a natural-language sear
                                   │ Search Query
                                   ▼
                          ┌──────────────────┐
-                         │   Express API    │
+                         │   Express API    │                                             
                          │      Server      │
                          └────────┬─────────┘
                                   │
                                   ▼
-                       ┌─────────────────────┐
-                       │ Search Orchestrator │
-                       └──────────┬──────────┘
+                       ┌─────────────────────┐                                                        
+                       │ Search Orchestrator │                                                        
+                       └──────────┬──────────┘                                                        
                                   │
                                   ▼
                        ┌─────────────────────┐
                        │   Search Adapter    │
-                       │                     │
                        │ GoogleSearchAdapter │
                        └──────────┬──────────┘
                                   │

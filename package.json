@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "type": "module",
   "scripts": {
-    "type": "module",
-    "test": "echo \"Error: no test specified\" && exit 1" , 
+    "test": "echo \"Error: no test specified\" && exit 1",
     "start": "tsx src/index.ts"
   },
   "keywords": [],
