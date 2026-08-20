@@ -1,7 +1,7 @@
 import express, { type NextFunction, type Request, type Response } from 'express';
 import cors from 'cors';
 import ApiError from './ApiError';
-import rootRouter from './routes';
+import rootRouter from './routes/index.js';
 
 const app = express();
 
