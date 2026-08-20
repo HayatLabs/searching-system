@@ -40,12 +40,12 @@ export class YahooSearchAdapter implements ISearchAdapter {
           return { title, rawUrl: href, cleanUrl };
         })
         .filter((item) => {
+          const urlLower = item.cleanUrl.toLowerCase();
+          const titleLower = item.title.toLowerCase();
 
-          const isYahoo = item.cleanUrl.includes('yahoo.com') || item.cleanUrl.includes('yahoo.co');
+          const isYahoo = urlLower.includes('yahoo') || titleLower.includes('yahoo');
 
-
-          // removeing the Bing ads from the results
-          const isBingAd = item.cleanUrl.includes('bing.com');
+          const isBingAd = urlLower.includes('bing.com');
 
           return item.cleanUrl && !isYahoo && !isBingAd && item.title.length > 2;
         });
