@@ -3,7 +3,7 @@ import * as cheerio from 'cheerio';
 import { ISearchAdapter } from './search-adapter.interface.js';
 import { SearchResult } from '../models/index.js';
 
-export class DuckDuckGoSearchAdapter implements ISearchAdapter {
+export class YahooSearchAdapter implements ISearchAdapter {
   async search(query: string, limit: number): Promise<SearchResult[]> {
     console.log(` Live searching for: "${query}" using Yahoo Search (Free & Robust)...`);
 

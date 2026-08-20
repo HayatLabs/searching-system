@@ -4,9 +4,7 @@ import { CrawlResult } from '../models';
 export class PageFetcher {
   private timeout = 8000; 
 
-  // ইউআরএল রিরাইটার (URL Rewriter)
   private prepareUrl(url: string): string {
-    // ১. ফেসবুকের লিঙ্ককে m.facebook.com (মডার্ন মোবাইল সাইট) এ রূপান্তর করছি
     if (url.includes('facebook.com') && !url.includes('m.facebook.com')) {
       console.log(`[Crawler] Rewriting Facebook URL to m.facebook.com for stable mobile fetch...`);
       return url
@@ -14,13 +12,11 @@ export class PageFetcher {
         .replace('mbasic.facebook.com', 'm.facebook.com');
     }
 
-    // ২. লিঙ্কডইনের জন্য গুগল ক্যাশ মেথড
     if (url.includes('linkedin.com')) {
       console.log(`[Crawler] Rewriting LinkedIn URL to Google Cache to bypass login wall...`);
       return `http://webcache.googleusercontent.com/search?q=cache:${encodeURIComponent(url)}`;
     }
 
-    // ৩. টুইটার/এক্স এর লিঙ্ক
     if (url.includes('twitter.com') || url.includes('x.com')) {
       console.log(`[Crawler] Rewriting Twitter URL to Nitter for non-blocking scrape...`);
       return url
@@ -31,14 +27,12 @@ export class PageFetcher {
     return url;
   }
 
-  // ডাইনামিক হেডার
   private getHeaders(targetUrl: string): Record<string, string> {
     const defaultHeaders = {
       'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
       'Accept-Language': 'en-US,en;q=0.5',
     };
 
-    // ১. ফেসবুক মোবাইলের জন্য আসল iPhone Safari User-Agent (এটি ১00% ফায়ারওয়াল বাইপাস করবে)
     if (targetUrl.includes('m.facebook.com')) {
       return {
         ...defaultHeaders,
@@ -47,7 +41,6 @@ export class PageFetcher {
       };
     }
 
-    // ২. গুগল ক্যাশ এর জন্য ডেস্কটপ হেডার
     if (targetUrl.includes('googleusercontent.com')) {
       return {
         ...defaultHeaders,
@@ -56,7 +49,6 @@ export class PageFetcher {
       };
     }
 
-    // ৩. ডিফল্ট ডেস্কটপ হেডার
     return {
       ...defaultHeaders,
       'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36'
