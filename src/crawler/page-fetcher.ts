@@ -4,21 +4,31 @@ import { CrawlResult } from '../models';
 export class PageFetcher {
   private timeout = 8000; 
 
+  private async getArchiveUrl(url: string): Promise<string | null> {
+    try {
+      const archiveApi = `https://archive.org/wayback/available?url=${encodeURIComponent(url)}`;
+      const response = await axios.get(archiveApi, { timeout: 4000 });
+      
+      const snapshot = response.data?.archived_snapshots?.closest;
+      if (snapshot && snapshot.available && snapshot.url) {
+        return snapshot.url;
+      }
+      return null;
+    } catch {
+      return null; 
+    }
+  }
+
   private prepareUrl(url: string): string {
     if (url.includes('facebook.com') && !url.includes('m.facebook.com')) {
-      console.log(`[Crawler] Rewriting Facebook URL to m.facebook.com for stable mobile fetch...`);
+      console.log(`[Crawler] Rewriting Facebook URL to m.facebook.com for stable fetch...`);
       return url
         .replace('www.facebook.com', 'm.facebook.com')
         .replace('mbasic.facebook.com', 'm.facebook.com');
     }
 
-    if (url.includes('linkedin.com')) {
-      console.log(`[Crawler] Rewriting LinkedIn URL to Google Cache to bypass login wall...`);
-      return `http://webcache.googleusercontent.com/search?q=cache:${encodeURIComponent(url)}`;
-    }
-
     if (url.includes('twitter.com') || url.includes('x.com')) {
-      console.log(`[Crawler] Rewriting Twitter URL to Nitter for non-blocking scrape...`);
+      console.log(`[Crawler] Rewriting Twitter URL to Nitter...`);
       return url
         .replace('twitter.com', 'nitter.net')
         .replace('x.com', 'nitter.net');
@@ -41,14 +51,6 @@ export class PageFetcher {
       };
     }
 
-    if (targetUrl.includes('googleusercontent.com')) {
-      return {
-        ...defaultHeaders,
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36',
-        'Referer': 'https://google.com'
-      };
-    }
-
     return {
       ...defaultHeaders,
       'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36'
@@ -56,7 +58,17 @@ export class PageFetcher {
   }
 
   async fetchSingle(url: string): Promise<CrawlResult | null> {
-    const targetUrl = this.prepareUrl(url);
+    let targetUrl = this.prepareUrl(url);
+
+    const isProtectedSite = url.includes('linkedin.com') || url.includes('facebook.com');
+    if (isProtectedSite) {
+      console.log(`[Crawler] Checking Internet Archive for: ${url}`);
+      const archiveUrl = await this.getArchiveUrl(url);
+      if (archiveUrl) {
+        targetUrl = archiveUrl;
+      }
+    }
+
     const headers = this.getHeaders(targetUrl);
 
     try {

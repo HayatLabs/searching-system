@@ -41,7 +41,6 @@ export class YahooSearchAdapter implements ISearchAdapter {
         })
         .filter((item) => {
 
-          // yahoo own links are not useful for our search results
           const isYahoo = item.cleanUrl.includes('yahoo.com') || item.cleanUrl.includes('yahoo.co');
           
 

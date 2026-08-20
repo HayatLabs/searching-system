@@ -4,8 +4,8 @@ import { CrawlResult, ExtractedContent } from '../models';
 export class ContentExtractor {
   public async extract(crawlResult: CrawlResult): Promise<ExtractedContent> {
     const { url, rawHtml } = crawlResult;
-    console.log(`[Extractor] Extracting content from: ${url}`);
-    console.log("row html => ", rawHtml)
+    // console.log(`[Extractor] Extracting content from: ${url}`);
+    // console.log("row html => ", rawHtml)
     const $ = cheerio.load(rawHtml);
 
     const ogTitle = $('meta[property="og:title"]').attr('content') || $('title').text().trim();
@@ -31,7 +31,7 @@ export class ContentExtractor {
             !text.includes('React');
         })
         .slice(0, 4)
-        .map((text, index) => `Post ${index + 1}:\n"${text.substring(0, 250)}..."`); // টেক্সট ফরম্যাট করা হলো
+        .map((text, index) => `Post ${index + 1}:\n"${text.substring(0, 250)}..."`); 
 
       const contactInfo = $('div:contains("About"), div:contains("Contact"), .bio')
         .toArray()
