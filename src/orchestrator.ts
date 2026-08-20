@@ -71,7 +71,7 @@ export class SearchOrchestrator {
 
             if (deepCrawlUrl) {
 
-                
+
                 console.log(`[Orchestrator] No contact info on homepage of ${crawlResult.url}. Deep crawling discovered link: ${deepCrawlUrl}`);
                 const deepCrawlResult = await this.fetcher.fetchSingle(deepCrawlUrl);
                 if (deepCrawlResult) {
@@ -96,4 +96,50 @@ export class SearchOrchestrator {
         console.log(`[Orchestrator] Successfully processed and structured ${finalStructuredData.length} sources.`);
         return finalStructuredData;
     }
+
+
+  public async fetchAndDiscoverSingle(url: string): Promise<ExtractedContent | null> {
+    console.log(`[Orchestrator] Direct fetching single URL: ${url}`);
+
+    const crawlResult = await this.fetcher.fetchSingle(url);
+    if (!crawlResult) {
+      return null;
+    }
+
+    const extracted = await this.extractor.extract(crawlResult);
+
+    const routes = this.discoverer.discover(crawlResult.rawHtml, crawlResult.url);
+    extracted.discoveredRoutes = routes;
+
+    const hasEmailOrPhone = (extracted.contact?.emails && extracted.contact.emails.length > 0) || 
+                            (extracted.contact?.phones && extracted.contact.phones.length > 0);
+
+    if (hasEmailOrPhone || extracted.metadata.isSocialMedia) {
+      return extracted; 
+    }
+
+    const deepCrawlUrl = routes.contact[0] || routes.about[0];
+    if (deepCrawlUrl) {
+      console.log(`[Orchestrator] No contact info on homepage. Deep crawling discovered link: ${deepCrawlUrl}`);
+      
+      const deepCrawlResult = await this.fetcher.fetchSingle(deepCrawlUrl);
+      if (deepCrawlResult) {
+        const deepExtracted = await this.extractor.extract(deepCrawlResult);
+        
+        return {
+          ...extracted,
+          about: deepExtracted.about || extracted.about,
+          contact: {
+            emails: [...new Set([...(extracted.contact?.emails || []), ...(deepExtracted.contact?.emails || [])])],
+            phones: [...new Set([...(extracted.contact?.phones || []), ...(deepExtracted.contact?.phones || [])])],
+            socials: [...new Set([...(extracted.contact?.socials || []), ...(deepExtracted.contact?.socials || [])])]
+          }
+        };
+      }
+    }
+
+    return extracted;
+  }
+
+
 }

@@ -1,5 +1,5 @@
 import app from './app';
-const PORT = process.env.PORT || 50001;
+const PORT = process.env.PORT || 5001;
 
 app.listen(PORT , ()=>{
     console.log({
@@ -7,6 +7,3 @@ app.listen(PORT , ()=>{
         url : ` https://localhost:${PORT}`
     })
 })
-
-
-

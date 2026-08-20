@@ -11,4 +11,6 @@ export interface StructuredSource {
   query: string;
   sources: ExtractedContent[];
 }
-
+export interface RankedResult extends SearchResult {
+  score: number;
+}

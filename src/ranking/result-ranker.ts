@@ -1,8 +1,6 @@
-import { SearchResult } from '../models';
+import { RankedResult, SearchResult } from '../models';
 
-export interface RankedResult extends SearchResult {
-  score: number;
-}
+
 
 export class ResultRanker {
   private blacklist = ['pinterest.com', 'instagram.com', 'tumblr.com', 'flickr.com', 'reddit.com'];

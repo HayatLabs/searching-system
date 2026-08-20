@@ -42,7 +42,6 @@ export class YahooSearchAdapter implements ISearchAdapter {
         .filter((item) => {
 
           const isYahoo = item.cleanUrl.includes('yahoo.com') || item.cleanUrl.includes('yahoo.co');
-          
 
 
           // removeing the Bing ads from the results
