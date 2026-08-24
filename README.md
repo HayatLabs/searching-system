@@ -13,8 +13,7 @@ An extensible, high-performance web discovery and search system built with Node.
 - **Parallel Asynchronous Crawler**: Crawls multiple discovered URLs concurrently using `Promise.all()` to maximize speed, ensuring zero sequential blocking loops on the event loop.
 
   - **Wayback Machine Integration**: Automatically falls back to the Internet Archive (Wayback Machine) API to fetch cached snapshots of highly-protected platforms like LinkedIn, entirely bypassing the Authwall.
-- **Deep Route Discovery (99.99% Accuracy)**: Scans crawled landing pages to identify relative and anchor links matching high-value internal paths (e.g., `/contact`, `/about-us`, `/#projects`).
-- **Hybrid Content & Contact Extractor**: 
+  - **Deep Route Discovery**: Detects likely high-value internal routes such as contact, about, portfolio, and team pages using configurable route heuristics.- **Hybrid Content & Contact Extractor**: 
   - Purges HTML clutter (scripts, styles, ads, navbars) to extract clean text.
   - Utilizes lightweight Regular Expressions (RegEx) to capture emails, phone numbers, and cross-platform social links.
   - Extracts Open Graph (OG) metadata as a highly-reliable fallback for locked social media pages.
